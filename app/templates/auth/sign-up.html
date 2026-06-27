@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %} Sign Up {% endblock %}
+
+{% block content %}
+    <div class="min-h-screen flex">
+        <div class="w-1/2 flex flex-col items-center justify-center gap-5">
+            <div class="text-5xl tracking-wider font-extrabold text-black">SIGN UP</div>
+            <form action="/auth/sign-up/validate" method="post" class="flex flex-col gap-4">
+                <div class="flex flex-col">
+                    <span class="flex justify-right items-center gap-2">
+                        <img src="{{ url_for('static', filename='images/auth/username.png') }}" class="w-8">
+                        <span class="text-right">Username :</span>
+                    </span>
+                    <input type="text" name="username" id="username" placeholder="Enter your Username" class="w-70 border-2 border-gray-400 rounded-lg p-2 text-sm">
+                </div>
+                 <div class="flex flex-col">
+                    <span class="flex justify-right items-center gap-2">
+                        <img src="{{ url_for('static', filename='images/auth/email.png') }}" class="w-8">
+                        <span class="text-right">Email :</span>
+                    </span>
+                    <input type="text" name="email" id="email" placeholder="Enter your Email" class="w-70 border-2 border-gray-400 rounded-lg p-2 text-sm">
+                </div>
+                <div class="flex flex-col">
+                    <span class="flex justify-right items-center gap-2">
+                        <img src="{{ url_for('static', filename='images/auth/password.png') }}" class="w-8">
+                        <span class="text-base">Password :</span>
+                    </span>
+                    <input type="password" name="password" id="password" placeholder="Enter your Password" class="border-2 border-gray-400 rounded-lg p-2 text-sm">
+                </div>
+                <div class="flex flex-col">
+                    <span class="flex justify-right items-center gap-2">
+                        <img src="{{ url_for('static', filename='images/auth/confirm-password.png') }}" class="w-8">
+                        <span class="text-base">Confirm Password :</span>
+                    </span>
+                    <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm your Password" class="border-2 border-gray-400 rounded-lg p-2 text-sm">
+                </div>
+                <button type="submit" class="text-2xl font-semibold flex justify-center bg-gray-700 text-white hover:bg-blue-500 p-3 transition-all duration-150 rounded-xl mt-3">SIGN UP</button>
+            </form>
+        </div>
+        <div class="w-1/2 bg-black text-white flex flex-col items-center justify-center rounded-l-[250px] gap-20">
+            <div class="flex flex-col items-center">
+                <img src="{{ url_for('static', filename='images/Mesh.png') }}" class="w-75">
+                <div class="text-2xl tracking-tighter font-semibold text-gray-100">Harmony in Every Connection</div>
+            </div>
+            <div class="flex flex-col py-5 items-center">
+                <div class="text-5xl font-bold">Welcome!</div>
+                <div class="text-2xl font-normal">Create an account to continue.</div>
+            </div>
+            <div class="flex flex-col items-center gap-2.5">
+                <div class="text-xl font-medium">Already have an account?</div>
+                <a href="/auth/login" class="text-2xl bg-gray-700 hover:bg-blue-700 active:bg-blue-700 transition-all duration-150 font-semibold p-5 rounded-xl">LOGIN</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
