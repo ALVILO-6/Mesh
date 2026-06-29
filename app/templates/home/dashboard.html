@@ -3,5 +3,49 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block content %}
-    Successfully logged in!
+    <div x-data="logoutHandler()" hx-get="/auth/check-session" hx-trigger="every 2s" hx-swap="none" class="p-10">
+        <button type="button" class="font-bold bg-red-700 text-white rounded-lg p-5" @click="logout">Logout</button>
+    </div>
+
+    <script>
+        function logoutHandler() {
+            return {
+                logout() {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Logout',
+                        text: 'Are you sure?',
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then(result => {
+                        if(result.isConfirmed) {
+                            htmx.ajax('POST', '/auth/logout');
+                        }
+                    });
+                }
+            }
+        }
+
+        document.body.addEventListener('sessionWarning', async () => {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Session Warning',
+                text: 'Your session is about to expire',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        });
+
+        document.body.addEventListener('sessionExpired', async () => {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Session Timeout',
+                text: 'Please re-login',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                htmx.ajax('POST', '/auth/logout');
+            });
+        });
+    </script>
 {% endblock %}
