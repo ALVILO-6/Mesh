@@ -3,7 +3,13 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block content %}
-    <div x-data="logoutHandler()" hx-get="/auth/check-session" hx-trigger="every 2s" hx-swap="none" class="p-10">
+    <style>
+        .swal2-confirm {
+            margin-left: auto !important;
+        }
+    </style>
+
+    <div x-data="logoutHandler()" hx-get="/auth/check-session" hx-trigger="every 1s" hx-swap="none" class="p-10">
         <button type="button" class="font-bold bg-red-700 text-white rounded-lg p-5" @click="logout">Logout</button>
     </div>
 
@@ -27,22 +33,39 @@
         }
 
         document.body.addEventListener('sessionWarning', async () => {
-            Swal.fire({
+            await Swal.fire({
+                toast: true,
+                position: 'bottom-end',
                 icon: 'warning',
                 title: 'Session Warning',
                 text: 'Your session is about to expire',
-                showConfirmButton: false,
-                timer: 3000
+                confirmButtonText: 'OK',
+                showClass: {
+                    popup: ''
+                },
+                hideClass: {
+                    popup: ''
+                },
+                reverseButtons: true
             });
         });
 
         document.body.addEventListener('sessionExpired', async () => {
             await Swal.fire({
-                icon: 'warning',
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
                 title: 'Session Timeout',
                 text: 'Please re-login',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000,
+                timerProgressBar: true,
+                showClass: {
+                    popup: ''
+                },
+                hideClass: {
+                    popup: ''
+                }
             }).then(() => {
                 htmx.ajax('POST', '/auth/logout');
             });

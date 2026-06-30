@@ -10,4 +10,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     REMEMBER_COOKIE_DURATION = timedelta(days=30)
-    PERMANENT_SESSION_LIFETIME = timedelta(seconds=10)
+    PERMANENT_SESSION_LIFETIME = timedelta(seconds=30)

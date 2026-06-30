@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, make_response, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, make_response, current_app, session
 
 from flask_login import login_user, logout_user, current_user
 from app.extensions import db
@@ -130,14 +130,24 @@ def check_session():
 
     seconds_left = remaining.total_seconds()
 
+    if 'session_expired' not in session:
+        session['session_expired'] = False
+
     # Session Expired
-    if seconds_left <= 3:
+    if seconds_left <= 3 and not session['session_expired']:
+        session['session_expired'] = True
+
         response = make_response("", 401)
         response.headers["HX-Trigger"] = "sessionExpired"
         return response
+    
+    if 'session_warning' not in session:
+        session['session_warning'] = False
 
     # Session Warning
-    if seconds_left <= 5:
+    if seconds_left <= 15 and not session['session_warning']:
+        session['session_warning'] = True
+
         response = make_response("WARNING")
         response.headers["HX-Trigger"] = "sessionWarning"
         return response
