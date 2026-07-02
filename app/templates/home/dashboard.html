@@ -19,9 +19,10 @@
                 logout() {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Logout',
-                        text: 'Are you sure?',
+                        title: 'Are you sure?',
+                        text: 'You will be logged out of this session.',
                         confirmButtonText: 'Yes',
+                        showCancelButton: true,
                         cancelButtonText: 'No'
                     }).then(result => {
                         if(result.isConfirmed) {
@@ -34,38 +35,30 @@
 
         document.body.addEventListener('sessionWarning', async () => {
             await Swal.fire({
-                toast: true,
-                position: 'bottom-end',
                 icon: 'warning',
-                title: 'Session Warning',
-                text: 'Your session is about to expire',
-                confirmButtonText: 'OK',
-                showClass: {
-                    popup: ''
-                },
-                hideClass: {
-                    popup: ''
-                },
-                reverseButtons: true
-            });
+                title: 'Session Expiration Warning',
+                text: 'Your session will expire soon. Extend session?',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: 'No'
+            }).then(result => {
+                if(result.isConfirmed) {
+                    htmx.ajax('POST', '/auth/extend-session', {
+                        swap: 'none'
+                    });
+                } else {
+                    htmx.ajax('POST', '/auth/logout');
+                }
+            })
         });
 
         document.body.addEventListener('sessionExpired', async () => {
             await Swal.fire({
-                toast: true,
-                position: 'bottom-end',
                 icon: 'error',
-                title: 'Session Timeout',
-                text: 'Please re-login',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                showClass: {
-                    popup: ''
-                },
-                hideClass: {
-                    popup: ''
-                }
+                title: 'Session Expired',
+                text: 'Please login again.',
+                confirmButtonText: 'OK',
+                timer: 2500
             }).then(() => {
                 htmx.ajax('POST', '/auth/logout');
             });

@@ -11,3 +11,4 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     REMEMBER_COOKIE_DURATION = timedelta(days=30)
     PERMANENT_SESSION_LIFETIME = timedelta(seconds=30)
+    SESSION_REFRESH_EACH_REQUEST = True

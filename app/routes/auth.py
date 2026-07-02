@@ -7,6 +7,12 @@ from datetime import datetime, timezone
 
 auth_bp = Blueprint('auth', __name__)
 
+@auth_bp.before_request
+def refresh_session():
+    if (current_user.is_authenticated and request.endpoint != 'auth.check_session'):
+        current_user.active_on = datetime.now(timezone.utc)
+        db.session.commit()
+
 @auth_bp.get('/login')
 def login():
     return render_template('auth/login.html')
@@ -153,3 +159,27 @@ def check_session():
         return response
 
     return "OK", 200
+
+@auth_bp.post('/extend-session')
+def extend_session():
+    if not current_user.is_authenticated:
+        response = make_response('', 401)
+        response.headers['HX-Trigger'] = 'sessionExpired'
+        return response
+    
+    current_user.active_on = datetime.now(timezone.utc)
+
+    session['session_warning'] = False
+    session['session_expired'] = False
+
+    # Extend session
+    session.modified = True
+
+    db.session.commit()
+
+    expired = datetime.now(timezone.utc) + current_app.permanent_session_lifetime
+
+    response = make_response('', 200)
+    response.headers['X-Session-Expires'] = str(int(expired.timestamp()))
+
+    return response
